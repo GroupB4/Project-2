@@ -1,8 +1,8 @@
-# SwagCode
-1v1 me rust bro
+Group B4 Project 2 
 
-Heyyyy, how ya'll doin?
-
-our current team orders
-
-james payne
+James Payne: Project Manager and lead programmer (steering implementation) 
+Jake Pulley: Programmer (steering implementation)
+Jay Naik: UI Design & Programmer
+Olivia Qader: Programmer (steering implementation)
+Hadiyah Mughal: UI Design & Programmer
+Pavilion Sahota: Programmer (Obstacle and UI design implementation)
