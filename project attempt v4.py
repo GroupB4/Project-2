@@ -1,24 +1,15 @@
-from Tkinter import *
+from Tkinter import*
 import math
 import time
-import urllib
-import base64
-
-
 root = Tk()
-canvas=Canvas(root,width = 550, height = 550)
+canvas=Canvas(root,width = 800, height = 800)
 canvas.pack()
-root.title("Virtual Robot Project")
-
-
-
-
 
 
 
 
 class Robot(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y, destination):
         self.x = x
         self.y = y
         self.x1 = x + 20
@@ -26,29 +17,44 @@ class Robot(object):
         self.id1 = canvas.create_oval(self.x,self.y,self.x1,self.y1,fill = 'grey')
         self.rx = (self.x1 - self.x)/2
         self.ry = (self.y1 - self.y)/2
-        self.dx = 0
-        self.dy = 0
+        self.z = canvas.create_line(self.x+10,self.y+10,self.x+100,self.x+100)
 
+
+        self.destination = destination
+        a = self.returncenter()
+        b = destination.finaldest()
+        self.vec1 = vector(a,b)
+        print self.vec1.distance()
+        dist2pass = self.vec1.distance()
+        print self.vec1.unit()
+        
+        #robot1.movement(sum1[0],sum1[1],dist2pass,canvas,b)
     
     def returncenter(self):
         self.center = self.x + self.rx, self.y + self.ry
         return self.center
 
-
     def LookAhead(self):
-            self.xAhead = self.x + self.sum1*3
-            self.yAhead = self.y + self.sum2*3
+            unit = self.vec1.unit()
+            self.xAhead = self.x + unit[0]*100
+            self.yAhead = self.y + unit[1]*100
+            canvas.coords(self.z,self.x+10,self.y+10,self.xAhead,self.yAhead) 
+            #self.z = canvas.create_line(self.x,self.y,self.xAhead,self.yAhead)
+            #self.z = canvas.create_line(self.x,self.y,self.x+100,self.y+100, fill="red", dash=(4, 4))
             #x - x1, y-y1 of sqr
             if self.xAhead > 100 and self.xAhead < 200 and self.yAhead > 100 and self.yAhead < 200:
                 print "Hit the sqr"
-    def movement(self,sum1,sum2,dist,canvas,dest):
+                self.vec1.rotate(30)
+            else:
+                print "Not Hitting"
+            
+            #canvas.delete(self.z)
+    def movement(self,canvas):
+        dest = self.destination.finaldest()
         canvas.create_oval(dest[0],dest[1],dest[0]+10,dest[1]+10,fill = 'red')
 
-        self.sum1 = sum1
-        self.sum2 = sum2
        # self.xpos = self.x
         #self.ypos = self.y
-        self.dist = dist
         #self.xdest = dest[0]
        # self.ydest = dest[1]
        # self.maxvol = 10
@@ -62,31 +68,25 @@ class Robot(object):
         #self.xvelocity = (self.xdest - self.xpos) * self.maxvol
         #self.yvelocity = (self.ydest - self.ypos) * self.maxvol
         #self.velocity = self.xvelocity,self.yvelocity
+
+        dist = self.vec1.distance()
         i = 0
-        while i <= self.dist:
+        while i <= dist:
             i+= 1
+            sum1 = self.vec1.unit()
+            dist = self.vec1.distance()
+            
             self.LookAhead()
             #print "HI", self.y
-            self.y+=self.sum2
-            self.x+=self.sum1
+            self.y+=sum1[1]
+            self.x+=sum1[0]
             self.x1 = self.x + 20
             self.y1 = self.y +20 
             self.current_coord = (self.x,self.y,self.x1,self.y1)
-
-            
-            #if self.x < 234 and self.x1 > 345:
-                #print "hi"
-                #self.x = -10
-            #elif self.y > 100 and self.y1 < 200:
-               # print "hi"
-                #self.y = -10
             
             canvas.coords(self.id1, self.current_coord)
             canvas.update()
             time.sleep(0.01)
-
-            
-        
 
 
 
@@ -98,7 +98,6 @@ class Destination:
     def finaldest(self):
         self.dest = self.x,self.y
         return self.dest
-
 
 class vector():
     def __init__(self,list1,list2):
@@ -116,22 +115,18 @@ class vector():
         self.bunit = self.b/distance
         return self.aunit, self.bunit
 
+    def rotate(self,angle):
+        oldx = self.diff[0]
+        oldy = self.diff[1]
+
+        newx = oldx*math.cos(angle)-oldy*math.sin(angle)
+        newy = oldx*math.sin(angle)+oldy*math.cos(angle)
+
+        self.diff = (newx, newy)
+    
 
 
-
-treasure1 = canvas.create_oval(200,200,280,280,fill = 'purple')
-treasure2 = canvas.create_oval(300,500,380,420,fill = 'purple')
-treasure3 = canvas.create_oval(100,500,180,415,fill = 'purple')
-
-robot1 = Robot(20,20)
 destination1 = Destination(234,345)
-a = robot1.returncenter()
-b = destination1.finaldest()
-
-vec1 = vector(a,b)
-print vec1.distance()
-dist2pass = vec1.distance()
-print vec1.unit()
-sum1 = vec1.unit()
-robot1.movement(sum1[0],sum1[1],dist2pass,canvas,b)
+robot1 = Robot(20,20, destination1)
+robot1.movement(canvas)
 root.mainloop()
