@@ -1,4 +1,4 @@
-Group B4 Project 2 
+<b>Group B4 Project 2 </b>
 
 James Payne: Project Manager and lead programmer (steering implementation) 
 
