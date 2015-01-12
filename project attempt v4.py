@@ -2,8 +2,9 @@ from Tkinter import*
 import math
 import time
 root = Tk()
-canvas=Canvas(root,width = 800, height = 800)
+canvas=Canvas(root,width = 600, height = 600)
 canvas.pack()
+root.title("Virtual Robot Project")
 
 
 
@@ -90,6 +91,8 @@ class Robot(object):
 
 
 
+
+
 class Destination:
     def __init__(self, x , y):
         self.x = x
@@ -121,11 +124,45 @@ class vector():
 
         newx = oldx*math.cos(angle)-oldy*math.sin(angle)
         newy = oldx*math.sin(angle)+oldy*math.cos(angle)
+        
 
         self.diff = (newx, newy)
-    
 
 
+class treasure():
+    def __init__(self):
+        treasure1 = canvas.create_oval(200,200,280,280,fill = 'purple')
+        treasure2 = canvas.create_oval(300,500,380,420,fill = 'purple')
+        treasure3 = canvas.create_oval(100,500,180,415,fill = 'purple')
+
+
+#class avoidWalls():
+    #def __init__(self):
+        #x_min = 0
+        #y_min = 0
+        #x_max = 600
+        #y_min = 600
+
+    #def moveAway(self):
+
+        #vx = -10
+        #vy = +5
+        
+        #if self.x>=x_max:
+            #vx = -10.0
+            #print "Right wall"
+        #if self.y <= y_min:
+            #vy = 5.0
+            #print "Top wall"
+        #if self.y1 >= y_max:
+            #vy = -5.0
+            #print "Bottom wall"
+        #if self.x1 <=x_min:
+            #vx = 10.0
+            #print "Left wall"
+
+
+treasure()
 destination1 = Destination(234,345)
 robot1 = Robot(20,20, destination1)
 robot1.movement(canvas)
