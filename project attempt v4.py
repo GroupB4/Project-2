@@ -1,9 +1,26 @@
-from Tkinter import*
+from Tkinter import *
 import math
 import time
+import urllib
+import base64
+
+
 root = Tk()
-canvas=Canvas(root,width = 800, height = 800)
+canvas=Canvas(root,width = 550, height = 550)
 canvas.pack()
+root.title("Virtual Robot Project")
+
+
+
+#background
+#background=PhotoImage(file = "bYvO3.gif")
+#canvas.create_image(0,800, image = background, anchor = NW)
+#mainloop()
+
+
+
+
+
 class Robot(object):
     def __init__(self, x, y):
         self.x = x
@@ -13,10 +30,14 @@ class Robot(object):
         self.id1 = canvas.create_oval(self.x,self.y,self.x1,self.y1,fill = 'grey')
         self.rx = (self.x1 - self.x)/2
         self.ry = (self.y1 - self.y)/2
+        self.dx = 0
+        self.dy = 0
+
     
     def returncenter(self):
         self.center = self.x + self.rx, self.y + self.ry
         return self.center
+
 
     def LookAhead(self):
             self.xAhead = self.x + self.sum1*3
@@ -55,10 +76,21 @@ class Robot(object):
             self.x1 = self.x + 20
             self.y1 = self.y +20 
             self.current_coord = (self.x,self.y,self.x1,self.y1)
+
+            
+            #if self.x < 234 and self.x1 > 345:
+                #print "hi"
+                #self.x = -10
+            #elif self.y > 100 and self.y1 < 200:
+               # print "hi"
+                #self.y = -10
             
             canvas.coords(self.id1, self.current_coord)
             canvas.update()
             time.sleep(0.01)
+
+            
+        
 
 
 
@@ -70,6 +102,7 @@ class Destination:
     def finaldest(self):
         self.dest = self.x,self.y
         return self.dest
+
 
 class vector():
     def __init__(self,list1,list2):
@@ -88,19 +121,21 @@ class vector():
         return self.aunit, self.bunit
 
 
-    
 
 
+treasure1 = canvas.create_oval(200,200,280,280,fill = 'purple')
+treasure2 = canvas.create_oval(300,500,380,420,fill = 'purple')
+treasure3 = canvas.create_oval(100,500,180,415,fill = 'purple')
 
 robot1 = Robot(20,20)
 destination1 = Destination(234,345)
 a = robot1.returncenter()
 b = destination1.finaldest()
+
 vec1 = vector(a,b)
 print vec1.distance()
 dist2pass = vec1.distance()
 print vec1.unit()
 sum1 = vec1.unit()
 robot1.movement(sum1[0],sum1[1],dist2pass,canvas,b)
-
 root.mainloop()
