@@ -12,10 +12,6 @@ root.title("Virtual Robot Project")
 
 
 
-#background
-#background=PhotoImage(file = "bYvO3.gif")
-#canvas.create_image(0,800, image = background, anchor = NW)
-#mainloop()
 
 
 
