@@ -6,6 +6,10 @@ canvas=Canvas(root,width = 600, height = 600)
 canvas.pack()
 root.title("Virtual Robot Project")
 
+x_min = 0
+y_min = 0
+x_max = 600
+y_max = 600
 
 
 
@@ -50,6 +54,48 @@ class Robot(object):
                 print "Not Hitting"
             
             #canvas.delete(self.z)
+
+
+    def moveAwayOld(self):
+
+        vx, vy = self.vec1.unit()
+        print "move away"
+        
+        if self.x>=x_max:
+            vx = -10.0
+            print "Right wall"
+        if self.y <= y_min:
+            vy = 5.0
+            print "Top wall"
+        if self.y1 >= y_max:
+            vy = -5.0
+            print "Bottom wall"
+        if self.x1 <=x_min:
+            vx = 10.0
+            print "Left wall"
+
+        print vx, vy
+        #self.vec1.diff = (vx, vy)
+        print "end"
+
+    def moveAway(self):
+        print "move away"
+        
+        if self.x>=x_max:
+            self.vec1.rotate(30)
+            print "Right wall"
+        if self.y <= y_min:
+            self.vec1.rotate(45)
+            print "Top wall"
+        if self.y1 >= y_max:
+            self.vec1.rotate(30)
+            print "Bottom wall"
+        if self.x1 <=x_min:
+            self.vec1.rotate(30)
+            print "Left wall"
+
+        print "end"
+        
     def movement(self,canvas):
         dest = self.destination.finaldest()
         canvas.create_oval(dest[0],dest[1],dest[0]+10,dest[1]+10,fill = 'red')
@@ -74,10 +120,13 @@ class Robot(object):
         i = 0
         while i <= dist:
             i+= 1
-            sum1 = self.vec1.unit()
-            dist = self.vec1.distance()
+            
             
             self.LookAhead()
+            self.moveAway()
+
+            sum1 = self.vec1.unit()
+            dist = self.vec1.distance()
             #print "HI", self.y
             self.y+=sum1[1]
             self.x+=sum1[0]
@@ -88,6 +137,7 @@ class Robot(object):
             canvas.coords(self.id1, self.current_coord)
             canvas.update()
             time.sleep(0.01)
+    
 
 
 
@@ -136,30 +186,6 @@ class treasure():
         treasure3 = canvas.create_oval(100,500,180,415,fill = 'purple')
 
 
-#class avoidWalls():
-    #def __init__(self):
-        #x_min = 0
-        #y_min = 0
-        #x_max = 600
-        #y_min = 600
-
-    #def moveAway(self):
-
-        #vx = -10
-        #vy = +5
-        
-        #if self.x>=x_max:
-            #vx = -10.0
-            #print "Right wall"
-        #if self.y <= y_min:
-            #vy = 5.0
-            #print "Top wall"
-        #if self.y1 >= y_max:
-            #vy = -5.0
-            #print "Bottom wall"
-        #if self.x1 <=x_min:
-            #vx = 10.0
-            #print "Left wall"
 
 
 treasure()
