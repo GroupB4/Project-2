@@ -55,29 +55,6 @@ class Robot(object):
             
             #canvas.delete(self.z)
 
-
-    def moveAwayOld(self):
-
-        vx, vy = self.vec1.unit()
-        print "move away"
-        
-        if self.x>=x_max:
-            vx = -10.0
-            print "Right wall"
-        if self.y <= y_min:
-            vy = 5.0
-            print "Top wall"
-        if self.y1 >= y_max:
-            vy = -5.0
-            print "Bottom wall"
-        if self.x1 <=x_min:
-            vx = 10.0
-            print "Left wall"
-
-        print vx, vy
-        #self.vec1.diff = (vx, vy)
-        print "end"
-
     def moveAway(self):
         print "move away"
         
@@ -118,7 +95,8 @@ class Robot(object):
 
         dist = self.vec1.distance()
         i = 0
-        while i <= dist:
+        move = True
+        while move == True:
             i+= 1
             
             
