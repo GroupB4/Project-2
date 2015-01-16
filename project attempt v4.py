@@ -1,16 +1,17 @@
+#background is on pavs local storage, we'll use his laptop to show off the final product
+#the code for the background is commented so don't delete it
+#pav will make sure that the image code is commented so that everyone can run it
+#but only pav can run it with the pictures
+
 from Tkinter import*
-from PIL import Image, ImageTk
+#from PIL import Image, ImageTk
 import math
 import time
 root = Tk()
 canvas=Canvas(root,width = 600, height = 600)
-img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
-#photo = ImageTk.PhotoImage(image)
-#label = Label(image=photo)
-#label.image=photo
-canvas.create_image(0,0, image = img)
+#img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
+#canvas.create_image(0,0, image = img)
 canvas.pack()
-#label.pack()
 root.title("Virtual Robot Project")
 
 x_min = 0
