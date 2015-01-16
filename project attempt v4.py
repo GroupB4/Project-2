@@ -1,15 +1,23 @@
 from Tkinter import*
+from PIL import Image, ImageTk
 import math
 import time
 root = Tk()
 canvas=Canvas(root,width = 600, height = 600)
+img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
+#photo = ImageTk.PhotoImage(image)
+#label = Label(image=photo)
+#label.image=photo
+canvas.create_image(0,0, image = img)
 canvas.pack()
+#label.pack()
 root.title("Virtual Robot Project")
 
 x_min = 0
 y_min = 0
 x_max = 600
 y_max = 600
+
 
 
 
@@ -171,3 +179,4 @@ destination1 = Destination(234,345)
 robot1 = Robot(20,20, destination1)
 robot1.movement(canvas)
 root.mainloop()
+
