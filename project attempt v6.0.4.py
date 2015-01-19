@@ -1,9 +1,14 @@
 from Tkinter import*
+#from PIL import Image, ImageTk
 import math
 import time
 root = Tk()
-canvas=Canvas(root,width = 600, height = 600)
+canvas=Canvas(root,width = 650, height = 650)
+#img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
+#canvas.create_image(0,0, image = img)
 canvas.pack()
+root.title("Virtual Robot Project")
+
 
 
 
@@ -206,6 +211,16 @@ class vector():
         self.diff = (newx, newy)
         return True
 
+class treasure():
+    def __init__(self):
+        treasure1 = canvas.create_oval(200,200,280,280,fill = 'purple')
+        treasure2 = canvas.create_oval(300,500,380,420,fill = 'purple')
+        treasure3 = canvas.create_oval(100,500,180,415,fill = 'purple')
+
+
+
+
+treasure()
 
 destination1 = Destination(316,523)
 robot1 = Robot(20,20, destination1)
