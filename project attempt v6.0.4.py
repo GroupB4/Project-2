@@ -2,7 +2,7 @@ from Tkinter import*
 import math
 import time
 root = Tk()
-canvas=Canvas(root,width = 800, height = 800)
+canvas=Canvas(root,width = 600, height = 600)
 canvas.pack()
 
 
