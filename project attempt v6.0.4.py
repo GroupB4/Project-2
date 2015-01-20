@@ -3,14 +3,30 @@ from Tkinter import*
 import math
 import time
 root = Tk()
-canvas=Canvas(root,width = 650, height = 650)
 #img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
 #canvas.create_image(0,0, image = img)
-canvas.pack()
 root.title("Virtual Robot Project")
 
+import io
+import base64
+import Tkinter as tk
+from urllib2 import urlopen
 
 
+image_url = "http://i.imgur.com/sfZFec2.gif"
+image_byt = urlopen(image_url).read()
+image_b64 = base64.encodestring(image_byt)
+photo = tk.PhotoImage(data=image_b64)
+
+canvas=Canvas(root,width = 650, height = 650)
+
+
+xpos = 0
+ypos = 0
+print(xpos, ypos)
+canvas.create_image(xpos, ypos, image=photo)
+
+canvas.pack()
 
 
 class Robot(object):
@@ -226,3 +242,4 @@ destination1 = Destination(316,523)
 robot1 = Robot(20,20, destination1)
 robot1.movement(canvas)
 root.mainloop()
+
