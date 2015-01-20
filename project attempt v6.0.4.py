@@ -13,7 +13,7 @@ import Tkinter as tk
 from urllib2 import urlopen
 
 
-image_url = "http://i.imgur.com/sfZFec2.gif"
+image_url = "http://i.imgur.com/Q9VXPIw.gif"
 image_byt = urlopen(image_url).read()
 image_b64 = base64.encodestring(image_byt)
 photo = tk.PhotoImage(data=image_b64)
@@ -242,4 +242,3 @@ destination1 = Destination(316,523)
 robot1 = Robot(20,20, destination1)
 robot1.movement(canvas)
 root.mainloop()
-
