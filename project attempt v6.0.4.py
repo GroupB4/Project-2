@@ -2,6 +2,7 @@ from Tkinter import*
 #from PIL import Image, ImageTk
 import math
 import time
+import random
 root = Tk()
 #img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
 #canvas.create_image(0,0, image = img)
@@ -12,6 +13,14 @@ import base64
 import Tkinter as tk
 from urllib2 import urlopen
 
+global counting
+counting = 1
+
+global sleeping
+sleeping = 1
+
+global lightchange    
+lightchange = 1
 
 image_url = "http://i.imgur.com/Q9VXPIw.gif"
 image_byt = urlopen(image_url).read()
@@ -27,6 +36,10 @@ print(xpos, ypos)
 canvas.create_image(xpos, ypos, image=photo)
 
 canvas.pack()
+
+greenTraffic = canvas.create_oval(3,29,3+10,29+10,fill = 'green')
+amberTraffic = canvas.create_oval(3,17,3+10,17+10,fill = 'black')
+redTraffic = canvas.create_oval(3,5,3+10,5+10,fill = 'black')
 
 
 class Robot(object):
@@ -118,6 +131,15 @@ class Robot(object):
         dist = self.vec1.distance()
         i = 0
 
+        global counting
+        counting = 1
+
+        global sleeping
+        sleeping = 1
+
+        global lightchange    
+        lightchange = 1
+        
         while i <= dist:
             #print dist
             i+= 1
@@ -163,12 +185,59 @@ class Robot(object):
             #print finalenddest
             #print finalcurrent
             #print "yy"
+            if sleeping == 1:
+               time.sleep(0.01)
+            elif sleeping == 2:
+                time.sleep(0.07)
+            elif sleeping == 3:
+                time.sleep(2.0)
+
+            counting += 1
+
+        
+            if counting == 1:
+                lightchange = 4
+            elif counting == 5:
+                lightchange = 1
+
+            if counting == 200:
+                lightchange = 2
+            elif counting == 250:
+                counting = 0
+                lightchange = 3
+
+            if lightchange == 1:
+                canvas.itemconfigure(greenTraffic, fill = 'green')
+                canvas.itemconfigure(amberTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'black')
+                sleeping = 1
+        
+            elif lightchange == 2:
+                canvas.itemconfigure(amberTraffic, fill = 'yellow')
+                canvas.itemconfigure(greenTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'black')
+                sleeping = 2
+            
+            elif lightchange == 3:
+                canvas.itemconfigure(greenTraffic, fill = 'black')
+                canvas.itemconfigure(amberTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'red')
+                sleeping = 3
+                print "Stop"
+
+            elif lightchange == 4:
+                canvas.itemconfigure(amberTraffic, fill = 'yellow')
+                canvas.itemconfigure(greenTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'red')
+                sleeping = 2
+
+########################################################
+
             if finalcurrent == finalenddest:
                 print "mfdsalkgnoisngoierwANGOERWJNOIGRNEROIN"
             canvas.coords(self.id1, self.current_coord)
             canvas.update()
             
-            time.sleep(0.01)
 
 class LandMark:
     def __init__(self,x,x1,y,y1,fill,tresure):
