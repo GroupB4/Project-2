@@ -2,169 +2,154 @@ from Tkinter import*
 #from PIL import Image, ImageTk
 import math
 import time
-import random
 root = Tk()
+canvas=Canvas(root,width = 650, height = 650)
 #img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
 #canvas.create_image(0,0, image = img)
+canvas.pack()
 root.title("Virtual Robot Project")
 
-import io
-import base64
-import Tkinter as tk
-from urllib2 import urlopen
-
-global counting
-counting = 1
-
-global sleeping
-sleeping = 1
-
-global lightchange    
-lightchange = 1
-
-image_url = "http://i.imgur.com/Q9VXPIw.gif"
-image_byt = urlopen(image_url).read()
-image_b64 = base64.encodestring(image_byt)
-photo = tk.PhotoImage(data=image_b64)
-
-canvas=Canvas(root,width = 650, height = 650)
 
 
-xpos = 0
-ypos = 0
-print(xpos, ypos)
-canvas.create_image(xpos, ypos, image=photo)
-
-canvas.pack()
-
-greenTraffic = canvas.create_oval(3,29,3+10,29+10,fill = 'green')
-amberTraffic = canvas.create_oval(3,17,3+10,17+10,fill = 'black')
-redTraffic = canvas.create_oval(3,5,3+10,5+10,fill = 'black')
 
 
 class Robot(object):
 
-
-    
-
-    def __init__(self, x, y, destination):
+    def __init__(self, x, y):
+        self.q = -1
+        self.obnum = 5-1
         self.x = x
         self.y = y
         self.x1 = x + 20
         self.y1 = y + 20
-        self.id1 = canvas.create_oval(self.x,self.y,self.x1,self.y1,fill = 'grey')
+        self.pp=0
         self.rx = (self.x1 - self.x)/2
         self.ry = (self.y1 - self.y)/2
-        self.z = canvas.create_line(self.x+10,self.y+10,self.x+100,self.x+100)
+        self.tempxy =[]
         self.rotated = False
-        #canvas.create_rectangle(self.obx,self.oby,self.obx2,self.oby2,fill = 'green')
-        #canvas.create_rectangle(self.ob2x,self.ob2y,self.ob2x2,self.ob2y2,fill = 'red')
-        self.LM1 = LandMark(400,400,600,600,'red',True)
+        
+
+        ##Creating LandMarks
+        self.LM1 = LandMark(100,100,150,150,'red',True)
         self.LM1.CreateLM()
-        self.LM2 = LandMark(100,100,200,200,'green',False)
-        self.LM1coords = self.LM2.givecoords()
-        self.LM2coords = self.LM2.givecoords()
+        self.LM1coords = self.LM1.givecoords()
+        self.LM2 = LandMark(100,200,150,250,'green',True)
         self.LM2.CreateLM()
-        self.LM1.havetresure()
-        self.LM2.havetresure()
-        self.destination = destination
-        print self.LM2coords[0]
-        self.listx = [self.LM2coords[0],self.LM1coords[0]]
-        self.listy = [self.LM2coords[1],self.LM1coords[1]]
-        self.listx2 = [self.LM2coords[2],self.LM1coords[2]]
-        self.listy2 = [self.LM2coords[3],self.LM1coords[3]]
-        a = self.returncenter()
-        b = destination.finaldest()
-        self.vec1 = vector(a,b)
-        #print self.vec1.distance()
-        dist2pass = self.vec1.distance()
-        #print self.vec1.unit()
-        #print self.listx
-        #robot1.movement(sum1[0],sum1[1],dist2pass,canvas,b)
-        canvas.create_line(20,20,b)
+        self.LM2coords = self.LM2.givecoords()
+        self.LM3 = LandMark(200,200,250,250,'purple',True)
+        self.LM3.CreateLM()
+        self.LM3coords = self.LM3.givecoords()
+        self.LM4 = LandMark(300,300,350,350,'orange',False)
+        self.LM4.CreateLM()
+        self.LM4coords = self.LM4.givecoords()
+        self.LM5 = LandMark(400,400,450,450,'black',True)
+        self.LM5.CreateLM()
+        self.LM5coords = self.LM5.givecoords()
+
+
+        
+        
+        ##Creating Tresure
+        self.Tresure = []
+        self.Tresure.append(self.LM1.havetresure())
+        self.Tresure.append(self.LM2.havetresure())
+        self.Tresure.append(self.LM3.havetresure())
+        self.Tresure.append(self.LM4.havetresure())
+        self.Tresure.append(self.LM5.havetresure())
+
+        
+        ##Creating lists of LandMarks and Tresure
+        self.destxy = []
+        self.LMList = [self.LM1,self.LM2,self.LM3,self.LM4,self.LM5]
+        self.listx = [self.LM1coords[0],self.LM2coords[0],self.LM3coords[0],self.LM4coords[0],self.LM5coords[0]]
+        self.listy = [self.LM1coords[1],self.LM2coords[1],self.LM3coords[1],self.LM4coords[1],self.LM5coords[1]]
+        self.listx2 = [self.LM1coords[2],self.LM2coords[2],self.LM3coords[2],self.LM4coords[2],self.LM5coords[2]]
+        self.listy2 = [self.LM1coords[3],self.LM2coords[3],self.LM3coords[3],self.LM4coords[3],self.LM5coords[3]]
+        self.Tresure = [self.Tresure[0],self.Tresure[1],self.Tresure[2],self.Tresure[3],self.Tresure[4]]
+
+        ##Call the method search
+        self.search()
+
+        ##Creating a visable oval that represents the robot and a line for its look ahead vector
+        self.id1 = canvas.create_oval(self.x,self.y,self.x1,self.y1,fill = 'grey')
+        self.z = canvas.create_line(self.x+10,self.y+10,self.x+100,self.x+100)
+        self.rr = self.returncenter()
+
+
+
+    ##The search method decides what LandMarks need to be visited and avoided
+    def search(self):
+        self.q += 1
+
+        if self.Tresure[self.q] == True:
+            LMcoordtemp = self.LMList[self.q].givecoords()
+            destx = LMcoordtemp[2] - LMcoordtemp[0]
+            destx = destx/2
+            destx = destx+LMcoordtemp[0]
+            desty = LMcoordtemp[3] - LMcoordtemp[1]
+            desty = desty/2
+            desty = desty + LMcoordtemp[1]
+            self.destxy = [destx,desty]
+            print "FUFUUFUFUFUFUFUUFUFUF ",self.destxy
+        else:
+            self.search()
+
+
+    ##Not reallt used finds the center on the robots oval
     def returncenter(self):
         self.center = self.x + self.rx, self.y + self.ry
         return self.center
 
+
+
+
+    ##Looks at the end of the LookAhead vector to determin whether the robot need to avoid anything or not
     def LookAhead(self):
             unit = self.vec1.unit()
-            self.xAhead = self.x + unit[0]*50
-            self.yAhead = self.y + unit[1]*50
-            canvas.coords(self.z,self.x+10,self.y+10,self.xAhead,self.yAhead) 
-            #self.z = canvas.create_line(self.x,self.y,self.xAhead,self.yAhead)
-            #self.z = canvas.create_line(self.x,self.y,self.x+100,self.y+100, fill="red", dash=(4, 4))
-            #x - x1, y-y1 of sqr
-            #print self.listx
+            #print "From Look ", unit
+            self.xAhead = self.x + unit[0]*70
+            self.yAhead = self.y + unit[1]*70
+
+            canvas.coords(self.z,self.x+10,self.y+10,self.xAhead,self.yAhead)
+
             i=0
             ###########x,x1,y,y1############
-            for i in range (0,2):
-                if self.xAhead >= self.listx[i] and self.xAhead <= self.listx2[i] and self.yAhead >= self.listy[i]  and self.yAhead <= self.listy2[i]:
-            #if self.xAhead >= self.obx and self.xAhead <= self.obx2 and self.yAhead >= self.oby  and self.yAhead <= self.oby2:
-            #if self.xAhead in self.listx and self.xAhead
+            for i in range (0,self.obnum):
+                if self.LMList[i].havetresure() == False and self.xAhead >= self.listx[i] and self.xAhead <= self.listx2[i] and self.yAhead >= self.listy[i]  and self.yAhead <= self.listy2[i]:
+                    
                     print "Hit the sqr"
                     self.rotated = self.vec1.rotate(90)
-                    #print self.rotated
+                    canvas.update
             else:
-                #print "Not Hitting"
                 pass
-            #canvas.delete(self.z)
+    ##Move from a to b
+    ##This function is to move our robot while continually call look ahead
     def movement(self,canvas):
-        dest = self.destination.finaldest()
-        canvas.create_oval(dest[0]-10,dest[1]-10,dest[0]+10,dest[1]+10,fill = 'red')
-
-       # self.xpos = self.x
-        #self.ypos = self.y
-        #self.xdest = dest[0]
-       # self.ydest = dest[1]
-       # self.maxvol = 10
-       # print "here"
-        #print "xpos = ", self.xpos
-       # print "xdest = ",self.xdest
-        #print "ypos = ",self.ypos
-        #print "ydest = ",self.ydest
-        
-        
-        #self.xvelocity = (self.xdest - self.xpos) * self.maxvol
-        #self.yvelocity = (self.ydest - self.ypos) * self.maxvol
-        #self.velocity = self.xvelocity,self.yvelocity
-
+        dest = self.destxy
+        self.rr = self.returncenter()
+        self.vec1 = vector(self.rr,dest)
+        #canvas.create_line(self.rr,dest)
+        end = []
         dist = self.vec1.distance()
         i = 0
 
-        global counting
-        counting = 1
-
-        global sleeping
-        sleeping = 1
-
-        global lightchange    
-        lightchange = 1
-        
         while i <= dist:
             #print dist
             i+= 1
             sum1 = self.vec1.unit()
             self.LookAhead()
-            self.rr = (self.x+10,self.y+10)
+            
                 
             
-            if self.rotated == True:
-                tempxdest = dest[0]
-                tempydest = dest[1]
-                dest[0] = self.xAhead
-                dest[1] = self.yAhead
-                self.rr= (self.x,self.y)
-                self.vec2 = vector(self.rr,dest)
-                self.vec2.distance()
-                dist = self.vec2.distance()
-                #print dist
-                i=0
-                self.rotated = False
-            if i >= dist -1:
+            
+            
+            if self.rr == dest:
+                print "FUFUFUFU:LASJFJSLKNFQQNOFNPIFQ"
                 dest[0] = tempxdest
                 dest[1] = tempydest
                 
                 self.vec1 = vector(self.rr,dest)
+                
                 dist = self.vec1.distance()
                 i=0
                 #dist = self.vec1.distance()
@@ -181,64 +166,68 @@ class Robot(object):
             finalenddest = int(enddest1),int(enddest2)
             current1 = self.x
             current2 = self.y
-            finalcurrent = int(current1),int(current2)
+            finalcurrent = int(current1)+10,int(current2)+10
             #print finalenddest
             #print finalcurrent
             #print "yy"
-            if sleeping == 1:
-               time.sleep(0.01)
-            elif sleeping == 2:
-                time.sleep(0.07)
-            elif sleeping == 3:
-                time.sleep(2.0)
-
-            counting += 1
-
-        
-            if counting == 1:
-                lightchange = 4
-            elif counting == 5:
-                lightchange = 1
-
-            if counting == 200:
-                lightchange = 2
-            elif counting == 250:
-                counting = 0
-                lightchange = 3
-
-            if lightchange == 1:
-                canvas.itemconfigure(greenTraffic, fill = 'green')
-                canvas.itemconfigure(amberTraffic, fill = 'black')
-                canvas.itemconfigure(redTraffic, fill = 'black')
-                sleeping = 1
-        
-            elif lightchange == 2:
-                canvas.itemconfigure(amberTraffic, fill = 'yellow')
-                canvas.itemconfigure(greenTraffic, fill = 'black')
-                canvas.itemconfigure(redTraffic, fill = 'black')
-                sleeping = 2
+  
+            ####need to create a small square
+            var1= self.destxy[0]+1
+            var2= self.destxy[0]-1
+            var3= self.destxy[1]+1
+            var4= self.destxy[1]-1
+            if self.rotated == True:
+                print "FUCK HER RIGHT IN THE PUSSY"
+                tempxdest = dest[0]
+                tempydest = dest[1]
+                tempxy = dest
+                self.LookAhead()
+                dest[0] = self.xAhead
+                dest[1] = self.yAhead
+                self.rr= (self.x,self.y)
+                
+                self.vec2 = vector(self.rr,dest)
+                
+                end = self.vec2.returnend()
+                dist = self.vec2.distance()
+                #print dist
+                i=0
+                for x in range(0,int(dist)):
+                    sum2 = self.vec2.unit()
+                    print"This is sum2 ", sum2
+                    self.y+=sum2[1]
+                    self.x+=sum2[0]
+                    self.x1 = self.x + 20
+                    self.y1 = self.y +20 
+                    self.current_coord = (self.x,self.y,self.x1,self.y1)
+                    canvas.coords(self.z,self.x+10,self.y+10,self.xAhead,self.yAhead)
+                    canvas.coords(self.id1, self.current_coord)
+                    canvas.update()
+                    time.sleep(0.01)
+                    dist = 0
+                self.q = self.q -1
+                    #dest = tempxy
+                self.rotated = False
+                self.movement(canvas)
             
-            elif lightchange == 3:
-                canvas.itemconfigure(greenTraffic, fill = 'black')
-                canvas.itemconfigure(amberTraffic, fill = 'black')
-                canvas.itemconfigure(redTraffic, fill = 'red')
-                sleeping = 3
-                print "Stop"
-
-            elif lightchange == 4:
-                canvas.itemconfigure(amberTraffic, fill = 'yellow')
-                canvas.itemconfigure(greenTraffic, fill = 'black')
-                canvas.itemconfigure(redTraffic, fill = 'red')
-                sleeping = 2
-
-########################################################
-
-            if finalcurrent == finalenddest:
-                print "mfdsalkgnoisngoierwANGOERWJNOIGRNEROIN"
+            if finalcurrent[0] >= var2 and finalcurrent[0] <= var1 and finalcurrent[1] >= var4  and finalcurrent[1] <= var3:
+                print "Erm it might be wroking"
+                self.search()
+                self.movement(canvas)
+            print end
+            if self.rr == end:
+                print "Fucker"
+                
+                           
             canvas.coords(self.id1, self.current_coord)
             canvas.update()
             
+            
+            time.sleep(0.01)
 
+
+        
+## class that deals with all land marks
 class LandMark:
     def __init__(self,x,x1,y,y1,fill,tresure):
         self.x = x
@@ -248,7 +237,7 @@ class LandMark:
         self.colour = fill
         self.visitmaybe = tresure
         
-
+    
     def CreateLM(self):
         canvas.create_rectangle(self.x,self.x1,self.y,self.y1,fill = self.colour)        
     def givecoords(self):
@@ -256,24 +245,18 @@ class LandMark:
 
     def havetresure(self):
         if self.visitmaybe == True:
-            print "Yes"
+            return True
         else:
-            print "No"
+            return False
 
 
-class Destination:
-    def __init__(self, x , y):
-        self.x = x
-        self.y = y
-        
-    def finaldest(self):
-        self.dest = [self.x,self.y]
-        return self.dest
+
 
 class vector():
     def __init__(self,list1,list2):
+        self.list2 = list2
         self.diff = [list2[0] - list1[0], list2[1] - list1[1]]
-        #print self.diff
+        
 
     def distance(self):
         self.a = self.diff[0]
@@ -284,6 +267,7 @@ class vector():
         distance = self.distance()
         self.aunit = self.a/distance
         self.bunit = self.b/distance
+
         return self.aunit, self.bunit
 
     def rotate(self,angle):
@@ -295,19 +279,12 @@ class vector():
 
         self.diff = (newx, newy)
         return True
-
-class treasure():
-    def __init__(self):
-        treasure1 = canvas.create_oval(200,200,280,280,fill = 'purple')
-        treasure2 = canvas.create_oval(300,500,380,420,fill = 'purple')
-        treasure3 = canvas.create_oval(100,500,180,415,fill = 'purple')
+    def returnend(self):
+        return self.list2
 
 
 
 
-treasure()
-
-destination1 = Destination(316,523)
-robot1 = Robot(20,20, destination1)
+robot1 = Robot(20,20)
 robot1.movement(canvas)
 root.mainloop()
