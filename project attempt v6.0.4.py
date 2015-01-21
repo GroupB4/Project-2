@@ -90,7 +90,7 @@ class Robot(object):
             desty = desty/2
             desty = desty + LMcoordtemp[1]
             self.destxy = [destx,desty]
-            print "FUFUUFUFUFUFUFUUFUFUF ",self.destxy
+            print "FUFUUFUFUFUFUFUUFUFUFluffy ",self.destxy
         else:
             self.search()
 
@@ -177,7 +177,7 @@ class Robot(object):
             var3= self.destxy[1]+1
             var4= self.destxy[1]-1
             if self.rotated == True:
-                print "FUCK HER RIGHT IN THE PUSSY"
+                print "Nothing to see here..."
                 tempxdest = dest[0]
                 tempydest = dest[1]
                 tempxy = dest
@@ -211,12 +211,12 @@ class Robot(object):
                 self.movement(canvas)
             
             if finalcurrent[0] >= var2 and finalcurrent[0] <= var1 and finalcurrent[1] >= var4  and finalcurrent[1] <= var3:
-                print "Erm it might be wroking"
+                print "Of course it worked i never doubted it!"
                 self.search()
                 self.movement(canvas)
             print end
             if self.rr == end:
-                print "Fucker"
+                print "Or here..."
                 
                            
             canvas.coords(self.id1, self.current_coord)
