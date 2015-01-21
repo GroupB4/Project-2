@@ -2,15 +2,29 @@ from Tkinter import*
 #from PIL import Image, ImageTk
 import math
 import time
+import random
+import io
+import base64
+import Tkinter as tk
+from urllib2 import urlopen
 root = Tk()
-canvas=Canvas(root,width = 650, height = 650)
-#img = ImageTk.PhotoImage(Image.open("C:\Users\Pavilion\Pictures\space theme\spaceBK3.png"))
-#canvas.create_image(0,0, image = img)
-canvas.pack()
 root.title("Virtual Robot Project")
+image_url = "http://i.imgur.com/Q9VXPIw.gif"
+image_byt = urlopen(image_url).read()
+image_b64 = base64.encodestring(image_byt)
+photo = tk.PhotoImage(data=image_b64)
+canvas=Canvas(root,width = 650, height = 650)
+xpos = 0
+ypos = 0
+print(xpos, ypos)
+canvas.create_image(xpos, ypos, image=photo)
+canvas.pack()
 
+greenTraffic = canvas.create_oval(3,29,3+10,29+10,fill = 'green')
+amberTraffic = canvas.create_oval(3,17,3+10,17+10,fill = 'black')
+redTraffic = canvas.create_oval(3,5,3+10,5+10,fill = 'black')
 
-
+textWarning = canvas.create_text(600, 40, anchor=NE, text=".", fill='black')
 
 
 class Robot(object):
@@ -133,15 +147,73 @@ class Robot(object):
         dist = self.vec1.distance()
         i = 0
 
+        global counting
+        counting = 1
+
+        global sleeping
+        sleeping = 1
+
+        global lightchange    
+        lightchange = 1
+
         while i <= dist:
             #print dist
             i+= 1
             sum1 = self.vec1.unit()
             self.LookAhead()
             
+##################################################################
                 
+            if sleeping == 1:
+               time.sleep(0.01)
+            elif sleeping == 2:
+                time.sleep(0.07)
+            elif sleeping == 3:
+                time.sleep(2.0)
+
+            counting += 1
+
+        
+            if counting == 1:
+                lightchange = 4
+            elif counting == 5:
+                lightchange = 1
+
+            if counting == 90:
+                lightchange = 2
+            elif counting == 110:
+                counting = 0
+                lightchange = 3
+
+            if lightchange == 1:
+                canvas.itemconfigure(greenTraffic, fill = 'green')
+                canvas.itemconfigure(amberTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'black')
+                sleeping = 1
+                canvas.itemconfigure(textWarning, text=".", fill='black')
+        
+            elif lightchange == 2:
+                canvas.itemconfigure(amberTraffic, fill = 'yellow')
+                canvas.itemconfigure(greenTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'black')
+                sleeping = 2
+                canvas.itemconfigure(textWarning, text="Meteor shower incoming!!!", fill='white')
             
+            elif lightchange == 3:
+                canvas.itemconfigure(greenTraffic, fill = 'black')
+                canvas.itemconfigure(amberTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'red')
+                sleeping = 3
+                canvas.itemconfigure(textWarning, text="Meteor shower in effect!!!", fill='white')
+                print "Stop"
+
+            elif lightchange == 4:
+                canvas.itemconfigure(amberTraffic, fill = 'yellow')
+                canvas.itemconfigure(greenTraffic, fill = 'black')
+                canvas.itemconfigure(redTraffic, fill = 'red')
+                sleeping = 2
             
+###############################################################################
             
             if self.rr == dest:
                 print "FUFUFUFU:LASJFJSLKNFQQNOFNPIFQ"
