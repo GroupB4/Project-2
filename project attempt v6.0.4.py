@@ -44,20 +44,60 @@ class Robot(object):
         
 
         ##Creating LandMarks
-        self.LM1 = LandMark(100,100,150,150,'red',True)
+
+        
+        #landmark 1
+        LM4IMG_url = "http://i.imgur.com/8AZkQjm.gif"
+        image4_byt = urlopen(LM4IMG_url).read()
+        image4_b64 = base64.encodestring(image4_byt)
+        self.photo4 = tk.PhotoImage(data=image4_b64)
+        self.LM1 = LandMark(100,100,150,150,'blue',True)
         self.LM1.CreateLM()
+        self.LM4e = canvas.create_image(125,125, image=self.photo4)
         self.LM1coords = self.LM1.givecoords()
-        self.LM2 = LandMark(100,200,150,250,'green',True)
+
+        
+        #landmark 2
+        LM2IMG_url = "http://i.imgur.com/znZzpKZ.gif"
+        image5_byt = urlopen(LM2IMG_url).read()
+        image5_b64 = base64.encodestring(image5_byt)
+        self.photo5 = tk.PhotoImage(data=image5_b64)
+        self.LM2 = LandMark(150,250,150,250,'green',True)
         self.LM2.CreateLM()
+        self.LM2e = canvas.create_image(125,225, image=self.photo5)
         self.LM2coords = self.LM2.givecoords()
+
+
+        #landmark 3
+        LM3IMG_url = "http://i.imgur.com/PvjBwBA.gif"
+        image3_byt = urlopen(LM3IMG_url).read()
+        image3_b64 = base64.encodestring(image3_byt)
+        self.photo3 = tk.PhotoImage(data=image3_b64)
         self.LM3 = LandMark(200,200,250,250,'purple',True)
         self.LM3.CreateLM()
+        self.LM3e = canvas.create_image(225,225, image=self.photo3)
         self.LM3coords = self.LM3.givecoords()
+
+        
+        #landmark 4
+        LM4IMG_url = "http://i.imgur.com/T9Vht6S.gif"
+        image6_byt = urlopen(LM4IMG_url).read()
+        image6_b64 = base64.encodestring(image6_byt)
+        self.photo6 = tk.PhotoImage(data=image6_b64)
         self.LM4 = LandMark(300,300,350,350,'orange',False)
         self.LM4.CreateLM()
+        self.LM4e = canvas.create_image(325,325, image=self.photo6)
         self.LM4coords = self.LM4.givecoords()
+
+
+        #landmark 5
+        LM5IMG_url = "http://i.imgur.com/ZWSvQtS.gif"
+        image7_byt = urlopen(LM5IMG_url).read()
+        image7_b64 = base64.encodestring(image7_byt)
+        self.photo7 = tk.PhotoImage(data=image7_b64)
         self.LM5 = LandMark(400,400,450,450,'black',True)
         self.LM5.CreateLM()
+        self.LM5e = canvas.create_image(425,425, image=self.photo7)
         self.LM5coords = self.LM5.givecoords()
 
 
