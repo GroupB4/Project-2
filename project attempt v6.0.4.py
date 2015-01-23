@@ -1,5 +1,4 @@
 from Tkinter import*
-#from PIL import Image, ImageTk
 import math
 import time
 import random
@@ -28,6 +27,7 @@ textWarning = canvas.create_text(600, 40, anchor=NE, text=".", fill='black')
 
 
 class Robot(object):
+
 
     def __init__(self, x, y):
         self.q = -1
@@ -85,7 +85,17 @@ class Robot(object):
         self.search()
 
         ##Creating a visable oval that represents the robot and a line for its look ahead vector
-        self.id1 = canvas.create_oval(self.x,self.y,self.x1,self.y1,fill = 'grey')
+        #http://i.imgur.com/zR2sDWw.gif
+        #self.id1 = canvas.create_oval(self.x,self.y,self.x1,self.y1,fill = 'grey')
+
+        robotimage_url = "http://i.imgur.com/zR2sDWw.gif"
+        image2_byt = urlopen(robotimage_url).read()
+        image2_b64 = base64.encodestring(image2_byt)
+        self.photo2 = tk.PhotoImage(data=image2_b64)
+        #canvas.create_image(0,0, image=photo2)
+        self.id1 = canvas.create_image(self.x,self.y, image=self.photo2)
+        canvas.update()
+
         self.z = canvas.create_line(self.x+10,self.y+10,self.x+100,self.x+100)
         self.rr = self.returncenter()
 
@@ -169,7 +179,7 @@ class Robot(object):
             elif sleeping == 2:
                 time.sleep(0.07)
             elif sleeping == 3:
-                time.sleep(2.0)
+                time.sleep(1.0)
 
             counting += 1
 
@@ -230,7 +240,8 @@ class Robot(object):
             self.x+=sum1[0]
             self.x1 = self.x + 20
             self.y1 = self.y +20 
-            self.current_coord = (self.x,self.y,self.x1,self.y1)
+            #self.current_coord = (self.x,self.y,self.x1,self.y1)
+            self.current_coord = (self.x,self.y)
 
             
             enddest1 = dest[0]
@@ -271,7 +282,7 @@ class Robot(object):
                     self.x+=sum2[0]
                     self.x1 = self.x + 20
                     self.y1 = self.y +20 
-                    self.current_coord = (self.x,self.y,self.x1,self.y1)
+                    self.current_coord = (self.x,self.y)
                     canvas.coords(self.z,self.x+10,self.y+10,self.xAhead,self.yAhead)
                     canvas.coords(self.id1, self.current_coord)
                     canvas.update()
@@ -318,6 +329,7 @@ class LandMark:
     def havetresure(self):
         if self.visitmaybe == True:
             return True
+            
         else:
             return False
 
@@ -335,7 +347,7 @@ class vector():
         self.b = self.diff[1]
         return math.sqrt(self.a**2 + self.b**2)
 
-    def unit(self):
+    def unit(self): 
         distance = self.distance()
         self.aunit = self.a/distance
         self.bunit = self.b/distance
