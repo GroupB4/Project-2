@@ -9,7 +9,7 @@ import Tkinter as tk
 from urllib2 import urlopen
 
 root = Tk()
-root.title("Virtual Robot Project")
+root.title("Virtual Robot Treasure Hunt")
 
 image_url = "http://i.imgur.com/Q9VXPIw.gif"
 image_byt = urlopen(image_url).read()
@@ -20,7 +20,7 @@ canvas=Canvas(root,width = 650, height = 650)
 
 xpos = 0
 ypos = 0
-print(xpos, ypos)
+#print(xpos, ypos)
 canvas.create_image(xpos, ypos, image=photo)
 canvas.pack()
 
@@ -32,48 +32,42 @@ textWarning = canvas.create_text(600, 40, anchor=NE, text=".", fill='black')
 
 
 
-###------Scale, GO and Exit Buttons------###
-def speedSelect():
-    speedValue = "Speed = " +str(var.get())
-    label.config(text = speedValue)
+###----------Buttons----------###
 
+#Start Robot and Timer#
 def displayUFO():
     Timer1=Timer(root)
-    Timer1.pack(side = BOTTOM, anchor = SW, padx = 4, pady = 4)
+    Timer1.pack()
     Timer1.Start()
     robot1 = Robot(20,20)
     robot1.movement(canvas)
 
-var = DoubleVar()
-
-class toolbarStuff():
-    def __init__(self,master):
-        
-        self.slider = Scale(variable=var, orient=HORIZONTAL, length=450, width=15,\
-               sliderlength=10, from_=1, to=10, tickinterval=1,\
-               cursor="hand2", bg="grey")
-        self.slider.pack(side = RIGHT, padx=8, pady=8)
-        
-        goButton = Button(text="Start", cursor="hand2", command=displayUFO)
-        goButton.pack(side=LEFT, padx=2, pady=2)
-
-        self.button = Button(text="Exit", cursor="trek", command=self.Exit).pack(side=RIGHT)
-
-    def Exit(self):
-        if tkMessageBox.askokcancel("Exit", "Are you sure you want to leave?"):
-            if tkMessageBox.askokcancel("Exit", "Really?"):
-                root.destroy()
-
-toolbarStuff = toolbarStuff(root)
+Button(text="Start", cursor="trek", command=displayUFO).pack(side=LEFT, padx=20, pady=5)
 
 
-label = Label()
-label.pack(side=BOTTOM, padx=5)
+#Stop Timer#
+def END():
+    Timer1=Timer(root)
+    Timer1.pack()
+    Timer1.Stop()
+
+Button(text="Stop", cursor="trek", command=END).pack(side=LEFT, padx=0, pady=5)
 
 
-###------Timer------###
+#Exit Program#
+def Exit():
+    if tkMessageBox.askokcancel("Exit", "Are you sure you want to leave?"):
+        if tkMessageBox.askokcancel("Exit", "Really?"):
+            root.destroy()
+
+Button(text="Exit", cursor="trek", command=Exit).pack(side=RIGHT, padx=20, pady=5)
+
+
+
+###----------Timer----------###
+
 toolbar = Frame(root)
-toolbar.pack(side = BOTTOM, anchor = SW, padx = 10, pady = 5)
+toolbar.pack(side=BOTTOM, anchor=SW, padx=10, pady=5)
 
 
 class Timer(Frame):
@@ -87,14 +81,13 @@ class Timer(Frame):
         self.running = 0
         self.timestr = StringVar()
         self.timerwidget()
-        print "yellow"
         
 
     #Timer widget on screen#
     def timerwidget(self):
         l = Label(self, textvariable=self.timestr)
         self.settime(self.elapsedtime)
-        l.pack(side=BOTTOM, padx=27)
+        l.pack(padx=25, pady=14)
 
 
     #Timer format in (00:00:00) = (Minutes : Seconds : Milliseconds)#
@@ -129,17 +122,32 @@ class Timer(Frame):
             self.running = 0
 
 
-#root = Timer(root)
-#root.pack(side = BOTTOM, anchor = SW, padx = 4, pady = 4)
+
+###----------Speed Scale----------###
+            
+def speedSelect():
+    speedValue = "Speed = " +str(var.get())
+    label.config(text = speedValue)
+
+var = DoubleVar()
 
 
-#Start and Stop buttons for timer#
-#Button(toolbar, text = 'Start', cursor = "trek", command = root.Start).pack(side = LEFT, padx = 4)
-#Button(toolbar, text = 'Stop', cursor = "trek", command = root.Stop).pack(side = LEFT, padx = 4)
+#Scale Widget#
+class SpeedScale():
+    def __init__(self,master):
+        
+        self.slider = Scale(variable=var, orient=HORIZONTAL, length=300, width=13,\
+               sliderlength=10, from_=1, to=10, tickinterval=1,\
+               cursor="trek")
+        self.slider.pack(side=RIGHT, padx=0, pady=4)
 
 
+SpeedScale = SpeedScale(root)
 
-###------Robot------###
+
+            
+###----------Robot----------###
+
 class Robot(object):
 
 
@@ -159,7 +167,6 @@ class Robot(object):
 
         ##Creating LandMarks
 
-        
         #landmark 1
         LM4IMG_url = "http://i.imgur.com/8AZkQjm.gif"
         image4_byt = urlopen(LM4IMG_url).read()
@@ -214,8 +221,6 @@ class Robot(object):
         self.LM5e = canvas.create_image(425,425, image=self.photo7)
         self.LM5coords = self.LM5.givecoords()
 
-
-        
         
         ##Creating Tresure
         self.Tresure = []
@@ -235,8 +240,10 @@ class Robot(object):
         self.listy2 = [self.LM1coords[3],self.LM2coords[3],self.LM3coords[3],self.LM4coords[3],self.LM5coords[3]]
         self.Tresure = [self.Tresure[0],self.Tresure[1],self.Tresure[2],self.Tresure[3],self.Tresure[4]]
 
+
         ##Call the method search
         self.search()
+
 
         ##Creating a visable oval that represents the robot and a line for its look ahead vector
         #http://i.imgur.com/zR2sDWw.gif
@@ -254,7 +261,6 @@ class Robot(object):
         self.rr = self.returncenter()
 
 
-
     ##The search method decides what LandMarks need to be visited and avoided
     def search(self):
         self.q += 1
@@ -268,12 +274,10 @@ class Robot(object):
             desty = desty/2
             desty = desty + LMcoordtemp[1]
             self.destxy = [destx,desty]
-            print "FUFUUFUFUFUFUFUUFUFUFluffy ",self.destxy
         else:
             self.search()
 
-
-    ##Not reallt used finds the center on the robots oval
+    ##Not really used finds the center on the robots oval
     def returncenter(self):
         self.center = self.x + self.rx, self.y + self.ry
         return self.center
@@ -295,7 +299,7 @@ class Robot(object):
             for i in range (0,self.obnum):
                 if self.LMList[i].havetresure() == False and self.xAhead >= self.listx[i] and self.xAhead <= self.listx2[i] and self.yAhead >= self.listy[i]  and self.yAhead <= self.listy2[i]:
                     
-                    print "Hit the sqr"
+                    #print "Hit the sqr"
                     self.rotated = self.vec1.rotate(90)
                     canvas.update
             else:
@@ -369,7 +373,7 @@ class Robot(object):
                 canvas.itemconfigure(redTraffic, fill = 'red')
                 sleeping = 3
                 canvas.itemconfigure(textWarning, text="Meteor shower in effect!!!", fill='white')
-                print "Stop"
+                #print "Stop"
 
             elif lightchange == 4:
                 canvas.itemconfigure(amberTraffic, fill = 'yellow')
@@ -380,7 +384,7 @@ class Robot(object):
 ###############################################################################
             
             if self.rr == dest:
-                print "FUFUFUFU:LASJFJSLKNFQQNOFNPIFQ"
+                #print "FUFUFUFU:LASJFJSLKNFQQNOFNPIFQ"
                 dest[0] = tempxdest
                 dest[1] = tempydest
                 
@@ -414,7 +418,7 @@ class Robot(object):
             var3= self.destxy[1]+1
             var4= self.destxy[1]-1
             if self.rotated == True:
-                print "Nothing to see here..."
+                #print "Nothing to see here..."
                 tempxdest = dest[0]
                 tempydest = dest[1]
                 tempxy = dest
@@ -431,7 +435,7 @@ class Robot(object):
                 i=0
                 for x in range(0,int(dist)):
                     sum2 = self.vec2.unit()
-                    print"This is sum2 ", sum2
+                    #print"This is sum2 ", sum2
                     self.y+=sum2[1]
                     self.x+=sum2[0]
                     self.x1 = self.x + 20
@@ -448,7 +452,7 @@ class Robot(object):
                 self.movement(canvas)
             
             if finalcurrent[0] >= var2 and finalcurrent[0] <= var1 and finalcurrent[1] >= var4  and finalcurrent[1] <= var3:
-                print "Of course it worked i never doubted it!"
+                #print "Of course it worked i never doubted it!"
                 self.search()
                 self.movement(canvas)
             print end
@@ -463,7 +467,6 @@ class Robot(object):
             time.sleep(0.01)
 
 
-            
 ## class that deals with all land marks
 class LandMark:
     def __init__(self,x,x1,y,y1,fill,tresure):
