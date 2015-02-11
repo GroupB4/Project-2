@@ -10,4 +10,4 @@ Olivia Qader: Programmer (steering implementation)
 
 Hadiyah Mughal: UI Design & Programmer
 
-Pavilion Sahota: xXx1337_Programmer_h4x0rzxXx (Obstacle and UI design implementation)
+Pavilion Sahota: xXx1337_Programmer_h4x0rzxXx (GUI Programmer)
